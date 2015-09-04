@@ -45,8 +45,8 @@ package
 			var timer=setInterval(function(){
 				if(ExternalInterface.call('JsAsMessage_js_checkReady')){
 					ExternalInterface.call('JsAsMessage_js_trigger',flashId,'allReady');
-					clearInterval(timer);
 					_trigger('allReady',function(){});
+					clearInterval(timer);
 				};
 			},10);
 
