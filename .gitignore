@@ -6,4 +6,5 @@ config
 service
 cmd.bat
 app.js
-
+.actionScriptProperties
+.project
