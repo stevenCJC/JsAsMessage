@@ -16,18 +16,7 @@ function JsAsMessage(flashId){
 	
 	this.handles={};
 	
-	
-	
 	var self=this,flashLoaded=false;
-		
-	_bind("readystatechange",JsAsMessage_checkReady);
-	
-	
-	
-	this.bind('allReady',function(){
-		
-	});
-
 	
 	window._JsAsMessage_[flashId]=this;
 }
@@ -55,7 +44,8 @@ JsAsMessage.prototype={
 
 
 function JsAsMessage_js_trigger(flashId,ev,msg){
-	var handles,flash=window._JsAsMessage_[window._JsAsMessage_];
+	console.log('js:'+flashId+ev+msg);
+	var handles,flash=window._JsAsMessage_[flashId];
 	if(flash)if(handles=flash.handles[ev])
 		for(var i=0,l=handles.length;i<l;i++)
 			handles[i](msg);
@@ -63,8 +53,9 @@ function JsAsMessage_js_trigger(flashId,ev,msg){
 
 //AS检测到document ready就说明已经准备好
 function JsAsMessage_js_checkReady(){
-		return document.readyState == "complete";
-	}
+	console.log('checking ready........');
+	return document.readyState == "complete";
+}
 
 
 function _bind(ev,handle,elem){

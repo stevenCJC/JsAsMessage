@@ -1,0 +1,9 @@
+node_modules
+npm-debug.log
+.settings
+client
+config
+service
+cmd.bat
+app.js
+

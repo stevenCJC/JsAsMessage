@@ -3,51 +3,68 @@
 
 package 
 {
-	
+	 import flash.external.ExternalInterface;
+	 import flash.utils.*;
+	 import flash.display.Sprite;  
+     import flash.events.*;  
 	//单例类 JsAsMessage.getInstance()
-	public class JsAsMessage
+	public class JsAsMessage extends Sprite
 	{
 
 		var flashId:String;
 		var handles:Object = {};
-		
-		public static var _instance:JsAsMessage;
-		
-		
-		public static function getInstance(flashId:String):JsAsMessage {
-			  if(_instance == null) {
-						_instance = new JsAsMessage(flashId,new SingletonEnforcer());
-			   }
-			   return _instance;
-		 }
-			 
-			 
-		public function JsAsMessage(_flashId:String,singletonEnforcer:SingletonEnforcer)
+
+		private static var _instance:JsAsMessage;
+
+
+		public static function getInstance(flashId:String):JsAsMessage
 		{
-			if(singletonEnforcr == null) throw new Error("Singleton Error");
-			
+			trace('tt');
+			if (_instance == null)
+			{
+				_instance = new JsAsMessage(flashId,new SingletonEnforcer());
+			}
+			return _instance;
+		}
+
+
+		public function JsAsMessage(_flashId:String,singletonEnforcer:SingletonEnforcer):void
+		{
+			if (singletonEnforcer == null)
+			{
+				console.error('Singleton Error');
+				throw new Error("Singleton Error");
+			}
+
 			flashId = _flashId;
+			console.log('flashId:'+flashId);
 			if (ExternalInterface.available)
 			{
+				console.log('ExternalInterface.available');
 				try
 				{
-
+					console.log('addCallback JsAsMessage_as_trigger');
 					ExternalInterface.addCallback("JsAsMessage_as_trigger", _trigger);
 
 				}
 				catch (error:SecurityError)
 				{
+					console.error(error.toString());
 				}
 
 
 			}
 
 			var timer=setInterval(function(){
-				if(ExternalInterface.call('JsAsMessage_js_checkReady')){
-					ExternalInterface.call('JsAsMessage_js_trigger',flashId,'allReady');
-					_trigger('allReady',function(){});
-					clearInterval(timer);
-				};
+			console.log('JsAsMessage_js_checkReady?');
+			if(checkReady()){
+				console.log('Ready!!');
+				ExternalInterface.call('JsAsMessage_js_trigger',flashId,'allReady','');
+				console.log('call:JsAsMessage_js_trigger');
+				_trigger('allReady','');
+				console.log('_trigger:allReady');
+				clearInterval(timer);
+			};
 			},10);
 
 		}
@@ -72,7 +89,11 @@ package
 			ExternalInterface.call('JsAsMessage_js_trigger',flashId,'message',msg);
 
 		}
-
+		
+		function checkReady():Boolean{
+			var isReady:Boolean=ExternalInterface.call('JsAsMessage_js_checkReady');
+			return isReady;
+		}
 
 		function _trigger(ev:String,msg:String):void
 		{
@@ -86,11 +107,13 @@ package
 		}
 
 
-
+function log(text:String):void{}
 
 
 	}
 
 }
 
-class  SingletonEnforcer{};
+class SingletonEnforcer
+{
+}
